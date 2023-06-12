@@ -5,7 +5,7 @@
 
 import { books, authors, genres, BOOKS_PER_PAGE } from "./data.js";
 
-let page = 1; // Current page number
+const page = 1; // 
 let matches = books; // List of books that match the search filters
 
 /**
@@ -36,8 +36,7 @@ const createButtonElement = ({ author, id, image, title }) => {
   return element;
 };
 
-//Initializes the starting list of book items. And also creates a document fragment
-//Which will hold the buttons for the initial boooks then append them to the fragment
+//Initializes the starting list of book items. And also creates a document fragment Which will hold the buttons for the initial boooks then append them to the fragment
 
 const initializeList = () => {
   const starting = document.createDocumentFragment();
@@ -230,58 +229,65 @@ const handleListButtonClick = () => {
  * @param {Event} event - The click event.
  */
 const handleListItemsClick = (event) => {
+  // Convert the event path to an array to ensure compatibility across browsers
   const pathArray = Array.from(event.path || event.composedPath());
+
+  // Variable to store the active book
   let active = null;
 
+  // Iterate through the path array to find the clicked element with a "data-preview" attribute
   for (const node of pathArray) {
+    // If an active book is found, exit the loop
     if (active) break;
 
+    // Check if the current node has a "data-preview" attribute
     if (node?.dataset?.preview) {
+      // Find the book in the "books" array based on the "id" matching the "data-preview" value
       active = books.find((book) => book.id === node.dataset.preview);
     }
   }
 
+  // If an active book is found
   if (active) {
+    // Get the elements from the DOM
     const listActive = document.querySelector("[data-list-active]");
-    listActive.open = true;
-    document.querySelector("[data-list-blur]").src = active.image;
-    document.querySelector("[data-list-image]").src = active.image;
-    document.querySelector("[data-list-title]").innerText = active.title;
-    document.querySelector("[data-list-subtitle]").innerText = `${
-      authors[active.author]
-    } (${new Date(active.published).getFullYear()})`;
-    document.querySelector("[data-list-description]").innerText =
-      active.description;
+    const listBlur = document.querySelector("[data-list-blur]");
+    const listImage = document.querySelector("[data-list-image]");
+    const listTitle = document.querySelector("[data-list-title]");
+    const listSubtitle = document.querySelector("[data-list-subtitle]");
+    const listDescription = document.querySelector("[data-list-description]");
+
+    // Set the necessary information of the active book to the corresponding DOM elements
+    listActive.open = true;                                 // Open the active list
+    listBlur.src = active.image;                            // Set the blur image source
+    listImage.src = active.image;                           // Set the image source
+    listTitle.innerText = active.title;                     // Set the book title
+    listSubtitle.innerText = `${authors[active.author]} (${new Date(active.published).getFullYear()})`;   // Set the book author and publication year
+    listDescription.innerText = active.description;         // Set the book description
   }
 };
 
-document
-  .querySelector("[data-search-cancel]")
-  .addEventListener("click", handleSearchCancel);
-document
-  .querySelector("[data-settings-cancel]")
-  .addEventListener("click", handleSettingsCancel);
-document
-  .querySelector("[data-header-search]")
-  .addEventListener("click", handleHeaderSearchClick);
-document
-  .querySelector("[data-header-settings]")
-  .addEventListener("click", handleHeaderSettingsClick);
-document
-  .querySelector("[data-list-close]")
-  .addEventListener("click", handleCloseListClick);
-document
-  .querySelector("[data-settings-form]")
-  .addEventListener("submit", handleSettingsFormSubmit);
-document
-  .querySelector("[data-search-form]")
-  .addEventListener("submit", handleSearchFormSubmit);
-document
-  .querySelector("[data-list-button]")
-  .addEventListener("click", handleListButtonClick);
-document
-  .querySelector("[data-list-items]")
-  .addEventListener("click", handleListItemsClick);
 
+// Event handlers for different elements
+const eventHandlers = {
+  "[data-search-cancel]": handleSearchCancel,                  // Handler for search cancel button
+  "[data-settings-cancel]": handleSettingsCancel,              // Handler for settings cancel button
+  "[data-header-search]": handleHeaderSearchClick,             // Handler for header search button
+  "[data-header-settings]": handleHeaderSettingsClick,         // Handler for header settings button
+  "[data-list-close]": handleCloseListClick,                   // Handler for list close button
+  "[data-settings-form]": handleSettingsFormSubmit,            // Handler for settings form submission
+  "[data-search-form]": handleSearchFormSubmit,                // Handler for search form submission
+  "[data-list-button]": handleListButtonClick,                 // Handler for list button click
+  "[data-list-items]": handleListItemsClick                     // Handler for list items click
+};
+
+// Attaching event listeners to elements using their respective handlers
+Object.keys(eventHandlers).forEach((selector) => {
+  document.querySelector(selector).addEventListener("click", eventHandlers[selector]);
+});
+
+// Initializing list
 initializeList();
+
+// Updating list button
 updateListButton();
