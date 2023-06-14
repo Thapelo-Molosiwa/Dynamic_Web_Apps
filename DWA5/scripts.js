@@ -14,16 +14,16 @@ form.addEventListener("submit", (event) => {
     document.body.innerText =
       " Something critical went wrong. Please reload the page.";
 
-    console.error("Invalid input provided. Program crashed");
+    throw new Error("Invalid input provided. Program crashed");
     
   } else if (dividend == "" || divider === "") {
     result.innerText =
       " Division not performed. Both values are required in inputs. Try again ";
-    console.error("lol ae spane sahn.");
+    throw new Error("lol ae spane sahn.");
   } else if (dividend < 0 || divider < 0) {
     result.innerText =
       "Division not performed. Invalid number provided. Try again";
 
-    console.error("cant run");
+    throw new Error("cant run");
   } else result.innerText = Math.floor(wholenumber);
 });
