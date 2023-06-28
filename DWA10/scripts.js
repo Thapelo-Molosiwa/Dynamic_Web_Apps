@@ -31,6 +31,8 @@ const addHandler = () => {
 }
 
 const reset = document.querySelector('[data-key="reset"]');
+
+
 const resetHandler = () => {
     number.value = 0;
     subtract.disabled = false;
