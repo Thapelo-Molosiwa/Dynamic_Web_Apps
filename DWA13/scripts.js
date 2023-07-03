@@ -69,5 +69,86 @@ const containsS = names.map((name) => {
   return name.split("").some((char) => char.toLowerCase() === "s");
 });
 
+const individuals = [
+  { name: 'Ashwin', province: 'Western Cape' },
+  { name: 'Sibongile', province: 'Gauteng' },
+  { name: 'Jan-Hendrik', province: 'Northern Cape' },
+  { name: 'Sifso', province: 'Eastern Cape' },
+  { name: 'Shailen', province: 'KwaZulu-Natal' },
+  { name: 'Frikkie', province: 'Free State' },
+];
+
+
 // Log the boolean array to the console
 console.log(containsS);
+
+// Use reduce to convert the individuals array into an object with names as keys and provinces as values
+const provinceObject = individuals.reduce((obj, individual) => {
+  obj[individual.name] = individual.province;
+  return obj;
+}, {});
+
+console.log(provinceObject);
+
+// Define the products array
+const products = [
+  { product: "banana", price: "2" },
+  { product: "mango", price: 6 },
+  { product: "potato", price: " " },
+  { product: "avocado", price: "8" },
+  { product: "coffee", price: 10 },
+  { product: "tea", price: "" },
+];
+
+//  Use forEach to console.log each product name
+products.forEach((product) => {
+  console.log(product.product);
+});
+
+// Use filter to filter out products with names longer than 5 characters
+const filteredProducts = products.filter(
+  (product) => product.product.length <= 5
+);
+console.log(filteredProducts);
+
+//  Use filter and map to convert string prices to numbers and remove products without prices,
+// then use reduce to calculate the combined price of all remaining products
+const totalPrice = products
+  .filter((product) => product.price !== "" && !isNaN(product.price))
+  .map((product) => ({ ...product, price: Number(product.price) }))
+  .reduce((sum, product) => sum + product.price, 0);
+
+console.log(totalPrice);
+
+// Use reduce to concatenate all product names into a string
+const concatenatedNames = products.reduce((str, product, index) => {
+  if (index === products.length - 1) {
+    return str + " and " + product.product;
+  } else {
+    return str + product.product + ", ";
+  }
+}, "");
+
+console.log(concatenatedNames);
+
+//  Use reduce to calculate the highest and lowest-priced items
+const { highest, lowest } = products.reduce(
+  (result, product) => {
+    if (product.price !== "" && !isNaN(product.price)) {
+      const price = Number(product.price);
+      if (price > result.highest.price) {
+        result.highest = { name: product.product, price };
+      }
+      if (price < result.lowest.price) {
+        result.lowest = { name: product.product, price };
+      }
+    }
+    return result;
+  },
+  {
+    highest: { name: "", price: -Infinity },
+    lowest: { name: "", price: Infinity },
+  }
+);
+
+console.log(`Highest: ${highest.name}. Lowest: ${lowest.name}.`);
